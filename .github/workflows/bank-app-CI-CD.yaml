@@ -135,10 +135,27 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/bank-app:${{ env.DATE }}
 
+    ############################## CD ###############################################
 
+      - name: Clone GitOps Repo
+        run: |
+          git clone https://x-access-token:${{ secrets.GIT_TOKEN }}@${{ secrets.GIT_OPS_REPO }}
+          # cd git-ops-ArgoCD
+          # ls -R
 
+      - name: Update Deployment YAML
+        run: |
+          cd git-ops-ArgoCD/bank-app/app
+          sed -i "s|\(image: .*\):.*|\1:${{ env.DATE }}|" deployment.yml
 
-
+      - name: Commit and Push to GitOps Repo
+        run: |
+          git config user.name "${{ secrets.GIT_USERNAME }}"
+          git config user.email "${{ secrets.GIT_EMAIL }}"
+          git add .
+          git commit -m "Update image to ${{ env.DATE }}"
+          git push origin master
+        working-directory: git-ops-ArgoCD
 
 
   ############################## Notifications #######################################
