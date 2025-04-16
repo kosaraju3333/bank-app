@@ -46,7 +46,7 @@ jobs:
           npx sonarqube-scanner \
           -Dsonar.projectKey=bank-app \
           -Dsonar.sources=src/main/java \
-          -Dsonar.java.binaries=target/classes
+          -Dsonar.java.binaries=target/classes \
           -Dsonar.host.url=https://sonarqube.spontansolutions.com/ \
           -Dsonar.login=$SONAR_TOKEN
     
