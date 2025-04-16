@@ -1,12 +1,24 @@
-FROM eclipse-temurin:17-jdk-alpine
+# Stage 1: Build stage
+FROM maven:3.9.4-eclipse-temurin-17 AS builder
 
-ENV APP_HOME /usr/src/app
+WORKDIR /app
+COPY pom.xml ./
+COPY src ./src
 
-COPY target/*.jar $APP_HOME/app.jar
+# Build the application and create a fat jar (adjust this if using Spring Boot or plain Java)
+RUN mvn clean package -DskipTests
 
-EXPOSE 8080
+# Stage 2: Runtime stage
+FROM eclipse-temurin:17-jre-alpine
 
-WORKDIR $APP_HOME
+WORKDIR /app
 
-CMD ["java","-jar","app.jar"]
+# Copy the jar from the build stage
+COPY --from=builder /app/target/*.jar app.jar
+
+# Expose the port your app listens on
+EXPOSE 5050
+
+# Run the jar
+ENTRYPOINT ["java", "-jar", "app.jar"]
 
