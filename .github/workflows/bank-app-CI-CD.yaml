@@ -1,0 +1,99 @@
+name: Java app DevSecOps Ci/CD Pipeline
+
+on: 
+  push:
+    branches:
+      - "master"
+
+jobs:
+  portal-app-CI-CD:
+    name: Java app DevSecOps Ci/CD Pipeline
+    runs-on: ubuntu-latest
+
+    ### GIT code Checkout 
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+    ### Installing Java JDK17 (Required for SonarQube)
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'maven'
+
+    ############################ Pre Build Phase ###################################
+    ### Run Trivy FS Scan
+      - name: Run Trivy FS Scan (Repository Dependencies)
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          scan-type: 'fs'
+          ignore-unfixed: true
+          format: 'table'
+          exit-code: 1
+          severity: 'CRITICAL,HIGH' 
+
+    ### SonarQube Scane for code analysis
+      - name: Code analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          npx sonarqube-scanner \
+          -Dsonar.projectKey=bank-app \
+          -Dsonar.sources=src \
+          -Dsonar.host.url=https://sonarqube.spontansolutions.com/ \
+          -Dsonar.login=$SONAR_TOKEN
+    
+    ### Wait for SonarQube Analysis
+      - name: Wait for SonarQube Analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          STATUS="PENDING"
+          while [ "$STATUS" == "PENDING" ]; do
+            sleep 20
+            RESPONSE=$(curl -s -u $SONAR_TOKEN: "https://sonarqube.spontansolutions.com/api/qualitygates/project_status?projectKey=bank-app")
+            STATUS=$(echo "$RESPONSE" | jq -r '.projectStatus.status' || echo "PENDING")
+            echo "Waiting for SonarQube Analysis... Current Status: $STATUS"
+          done
+
+    ### SonarQube Quality Gates
+      - name: Check SonarQube Quality Gate
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          STATUS=$(curl -s -u $SONAR_TOKEN: "https://sonarqube.spontansolutions.com/api/qualitygates/project_status?projectKey=bank-app" | jq -r .projectStatus.status)
+          echo $STATUS
+          if [ "$STATUS" != "OK" ]; then
+            echo "❌ ❌ Quality Gate Failed. Stoping deployment!! ❌ ❌ "
+            exit 1
+          fi
+
+    #################################### Build Phase ########################################
+
+    ### Compile with maven
+      - name: Maven Compile
+        run: mvn compile
+
+    ### Run Tests
+      - name: Run Tests
+        run: mvn test -DskipTests=true
+
+    ### Packaging the app
+      - name: App package
+        run: mvn package -DskipTests=true
+
+    ### Set Date Variable 
+      - name: Set Date Variable
+        run: echo "DATE=$(date +%Y%m%d-%H%M%S)" >> $GITHUB_ENV
+
+    ### Uploading jar to Nexus
+      - name: Upload to Nexus
+        run: |
+          curl -u ${{ secrets.NEXUS_USER }}:${{ secrets.NEXUS_PASS }} \
+          --upload-file target/*.jar \
+          https://nexus.spontansolutions.com/repository/bank-app-artifacts/bank-app-$DATE.jar
+      
+
+  
