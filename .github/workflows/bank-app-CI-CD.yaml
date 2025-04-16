@@ -101,4 +101,71 @@ jobs:
           https://nexus.spontansolutions.com/repository/bank-app-artifacts/bank-app-$DATE.jar
       
 
-  
+    ### Build Docker Image
+      - name: Build Bank-app Docker Image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          dockerfile: Dockerfile
+          push: false
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/bank-app:${{ env.DATE }}
+
+      - name: Scan local Docker image with Trivy
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: ${{ secrets.DOCKERHUB_USERNAME }}/bank-app:${{ env.DATE }}
+          format: 'table'
+          ignore-unfixed: true
+          exit-code: 0
+          severity: 'CRITICAL,HIGH'
+
+    ### Docker Login
+      - name: Login Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+    ### Push to Docker Hub
+      - name: Push Bank-app to Docker Hub
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          dockerfile: Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/bank-app:${{ env.DATE }}
+
+
+
+
+
+
+
+  ############################## Notifications #######################################
+    ### 🚨 Send Slack Alert on Failure
+      - name: Send Slack Alert on Failure
+        if: failure()
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data '{
+            "attachments": [
+              {
+                "color": "#FF0000",
+                "title": "🚨 CI/CD Pipeline Failed!",
+                "text": "❌ Repository: ${{ github.repository }}\nBranch: ${{ github.ref }}\nCheck logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+              }
+            ]
+          }' ${{ secrets.SLACK_WEBHOOK_URL }}
+
+    ### ✅ Send Slack Alert on Success
+      - name: Send Slack Alert on Success
+        if: success()
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data '{
+            "attachments": [
+              {
+                "color": "#36A64F",
+                "title": "✅ CI/CD Pipeline Succeeded!",
+                "text": "🎉 Repository: ${{ github.repository }}\nBranch: ${{ github.ref }}\nCheck logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+              }
+            ]
+          }' ${{ secrets.SLACK_WEBHOOK_URL }}
