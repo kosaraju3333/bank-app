@@ -34,6 +34,10 @@ jobs:
           exit-code: 0
           severity: 'CRITICAL,HIGH' 
 
+    ### Compile with maven
+      - name: Maven Compile
+        run: mvn compile
+
     ### SonarQube Scane for code analysis
       - name: Code analysis
         env:
@@ -41,7 +45,8 @@ jobs:
         run: |
           npx sonarqube-scanner \
           -Dsonar.projectKey=bank-app \
-          -Dsonar.sources=src \
+          -Dsonar.sources=src/main/java \
+          -Dsonar.java.binaries=target/classes
           -Dsonar.host.url=https://sonarqube.spontansolutions.com/ \
           -Dsonar.login=$SONAR_TOKEN
     
@@ -72,9 +77,9 @@ jobs:
 
     #################################### Build Phase ########################################
 
-    ### Compile with maven
-      - name: Maven Compile
-        run: mvn compile
+    # ### Compile with maven
+    #   - name: Maven Compile
+    #     run: mvn compile
 
     ### Run Tests
       - name: Run Tests
