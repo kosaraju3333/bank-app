@@ -1,6 +1,5 @@
-# Java Bank Application – AMI Creation Guide
+# Java Bank Application – Deployment Guide
 
----
 
 ## 📌 Step 1: AMI Creation – Java App Base Image
 
