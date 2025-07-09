@@ -108,26 +108,26 @@ sudo systemctl status bankapp.service
 ### 🖼️ Create the AMI
 Once everything is working as expected:
 
-Stop the EC2 instance (optional, recommended).
+1. Stop the EC2 instance (optional, recommended).
 
-In the AWS Console:
+2. In the AWS Console:
 
-Go to EC2 → Instances → Select your instance
+  *  Go to EC2 → Instances → Select your instance
 
-Click Actions → Image → Create Image
+  *  Click Actions → Image → Create Image
 
-Provide a name like java-bankapp-ami and description
+  *  Provide a name like java-bankapp-ami and description
 
-Create the AMI
+  *  Create the AMI
 
 ### ✅ Outcome
 You now have a reusable AMI with:
 
-Java 17 runtime
+  *  Java 17 runtime
 
-AWS CLI pre-installed
+  *  AWS CLI pre-installed
 
-Java app bootstrapped via systemd
+  * Java app bootstrapped via systemd
 
 This AMI can be used in auto-scaling groups, launch templates, or EC2-based deployments for consistent infrastructure.
 
