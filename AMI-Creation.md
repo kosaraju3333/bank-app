@@ -132,3 +132,42 @@ You now have a reusable AMI with:
 This AMI can be used in auto-scaling groups, launch templates, or EC2-based deployments for consistent infrastructure.
 
 ---
+
+## 🚀 Step 2: Deploy EC2 Instance from Custom AMI
+
+This section describes how to launch a production-ready EC2 instance using the custom AMI created in [Step 1](#-step-1-ami-creation--java-app-base-image).
+
+---
+
+### ✅ Launch EC2 from AMI
+
+1. **Go to AWS Console** → **EC2** → **Instances** → **Launch Instance**.
+2. **Name** your instance:  
+   Example: `bank-app-prod-server`
+3. Under **Application and OS Images (Amazon Machine Image)**:
+   - Click **My AMIs** tab.
+   - Select your custom AMI (`java-bankapp-ami`).
+4. Choose an **Instance Type** (e.g., `t3.micro` or `t3.medium` for production).
+5. Choose or create a **Key Pair** for SSH access.
+6. **Network Settings**:
+   - Assign a public IP (if accessing from the internet).
+   - Attach it to an existing **VPC and Subnet**.
+   - Open **port 80** and **port 443** (for HTTP/HTTPS).
+7. Click **Launch Instance**.
+
+---
+### 🔍 Verify Application Is Running
+
+Once the instance is launched:
+
+```bash
+# SSH into the instance
+ssh -i <your-key.pem> ubuntu@<your-public-ip>
+
+# Check if the service is running
+sudo systemctl status bankapp.service
+
+# Tail logs if needed
+tail -f /var/log/bank-app/app.log
+```
+`Visit http://<your-public-ip> in your browser to see the Java Bank App in action.`
