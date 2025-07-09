@@ -22,8 +22,11 @@ The goal is to create a reusable AMI that comes pre-installed with:
 sudo apt update
 sudo apt install -y openjdk-17-jdk
 java -version
+```
 
-2. Install AWS CLI
+### 2. Install AWS CLI
+
+```bash
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 unzip awscliv2.zip
 sudo ./aws/install
@@ -37,6 +40,7 @@ Create a startup script to run the Java Bank App.
 /opt/bank-app-start.sh
 
 📜 Sample Script:
+```bash
 #!/bin/bash
 
 #Downloading bank app jar from AWS S3 and starting app
@@ -62,7 +66,7 @@ aws s3 cp s3://bank-app-spontansolutions/bankapp-0.0.1-SNAPSHOT.jar $working_dir
 
 echo "********** Staring  bank app service from jar **********"
 exec /usr/bin/java -jar /home/ubuntu/bank-app/bankapp-0.0.1-SNAPSHOT.jar >> /var/log/bank-app/app.log 2>&1
-
+```
 Make it executable:
 chmod +x /opt/bank-app-start.sh
 
