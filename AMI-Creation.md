@@ -166,3 +166,59 @@ sudo systemctl status bankapp.service
 tail -f /var/log/bank-app/app.log
 ```
 `Visit http://<your-public-ip> in your browser to see the Java Bank App in action.`
+
+---
+
+## 🌐 Step 3: Set Up Load Balancer, Domain, and SSL
+
+This step guides you through exposing your Java Bank App to the internet using an **Application Load Balancer (ALB)**, **Route 53 custom domain**, and **SSL certificates** for HTTPS.
+
+
+### ✅ Create an Application Load Balancer (ALB)
+
+1. Go to **EC2 → Load Balancers → Create Load Balancer**
+2. Select **Application Load Balancer**
+3. **Name** your load balancer (e.g., `bank-app-alb`)
+4. **Scheme**: internet-facing
+5. **Listeners**:
+   - Add HTTP (port 80)
+   - Add HTTPS (port 443) if using SSL
+6. **Availability Zones**: Select at least 2 subnets
+
+### 🔀 Create a Target Group
+
+1. Choose **Instances** as the target type
+2. Name: `bank-app-tg`
+3. Protocol: **HTTP**, Port: **80**
+4. Register your EC2 instance running the Bank App
+5. Health check path: `/` (or your app health endpoint)
+
+### 🔗 Attach Target Group to Load Balancer
+
+1. In **Load Balancer Listener Rules**, forward HTTP/HTTPS to the `bank-app-tg` target group
+2. Save and review
+
+### 🌍 Configure Custom Domain with Route 53 (Optional)
+
+1. Go to **Route 53 → Hosted Zones → Create Hosted Zone**
+   - Domain: `yourdomain.com`
+2. Add an **A Record**:
+   - Type: A (Alias)
+   - Alias to: your ALB DNS name
+3. Update your domain's DNS provider to use Route 53 nameservers
+
+### 🔒 Enable SSL with AWS ACM
+
+1. Go to **AWS Certificate Manager (ACM)** → **Request a Public Certificate**
+2. Add domain name(s): `yourdomain.com`, `www.yourdomain.com`
+3. Choose **DNS validation**
+4. Once validated, go to **Load Balancer → Listeners → HTTPS (443)**
+   - Edit and attach your new SSL certificate
+   - Forward to your target group
+
+### 🧪 Test Your Setup
+
+- Visit: `https://yourdomain.com` or `https://<ALB-DNS-name>`
+- You should see your Java Bank App running securely behind the load balancer
+
+---
