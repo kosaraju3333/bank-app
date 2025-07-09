@@ -33,12 +33,10 @@ sudo ./aws/install
 aws --version
 ```
 
-🛠️ App Startup Script
+🛠️ App Startup Script:
 Create a startup script to run the Java Bank App.
-
 📁 Path:
 /opt/bank-app-start.sh
-
 📜 Sample Script:
 ```bash
 #!/bin/bash
