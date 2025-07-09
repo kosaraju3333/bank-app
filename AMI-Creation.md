@@ -70,7 +70,7 @@ exec /usr/bin/java -jar /home/ubuntu/bank-app/bankapp-0.0.1-SNAPSHOT.jar >> /var
 ```
 Make it executable:
 
-chmod +x /opt/bank-app-start.sh
+`chmod +x /opt/bank-app-start.sh`
 
 ### ⚙️ Configure systemd Service
 📁 Location:
