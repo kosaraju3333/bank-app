@@ -1,10 +1,10 @@
 # Java Bank Application – AMI Creation Guide
 
-This document outlines the steps taken to create a custom Amazon Machine Image (AMI) for deploying the Java-based Bank Application in a production-grade setup on AWS EC2.
-
 ---
 
 ## 📌 Step 1: AMI Creation – Java App Base Image
+
+This section outlines the steps taken to create a custom Amazon Machine Image (AMI) for deploying the Java-based Bank Application in a production-grade setup on AWS EC2.
 
 ### ✅ Purpose
 The goal is to create a reusable AMI that comes pre-installed with:
