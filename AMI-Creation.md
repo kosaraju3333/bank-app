@@ -24,7 +24,7 @@ sudo apt install -y openjdk-17-jdk
 java -version
 ```
 
-### 2. Install AWS CLI
+#### 2. Install AWS CLI
 
 ```bash
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
@@ -33,7 +33,7 @@ sudo ./aws/install
 aws --version
 ```
 
-🛠️ App Startup Script:
+### 🛠️ App Startup Script:
 
 Create a startup script to run the Java Bank App.
 
@@ -72,7 +72,7 @@ Make it executable:
 
 chmod +x /opt/bank-app-start.sh
 
-⚙️ Configure systemd Service
+### ⚙️ Configure systemd Service
 📁 Location:
 /etc/systemd/system/bankapp.service
 
@@ -86,8 +86,14 @@ After=network.target
 User=root
 WorkingDirectory=/opt
 ExecStart=/opt/bank-app-start.sh
+
 Restart=on-failure
 RestartSec=5
+SuccessExitStatus=143
+
+#Environment=JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+StandardOutput=journal
+StandardError=journal
 
 [Install]
 WantedBy=multi-user.target
