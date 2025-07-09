@@ -13,8 +13,6 @@ The goal is to create a reusable AMI that comes pre-installed with:
 - Java Bank Application startup script
 - Systemd service for automatic app startup on instance boot
 
----
-
 ### 🔧 Software Installation & Configuration
 
 #### 1. Install Java JRE 17
@@ -131,8 +129,6 @@ You now have a reusable AMI with:
 
 This AMI can be used in auto-scaling groups, launch templates, or EC2-based deployments for consistent infrastructure.
 
----
-
 ## 🚀 Step 2: Deploy EC2 Instance from Custom AMI
 
 This section describes how to launch a production-ready EC2 instance using the custom AMI created in [Step 1](#-step-1-ami-creation--java-app-base-image).
@@ -155,7 +151,6 @@ This section describes how to launch a production-ready EC2 instance using the c
    - Open **port 80** and **port 443** (for HTTP/HTTPS).
 7. Click **Launch Instance**.
 
----
 ### 🔍 Verify Application Is Running
 
 Once the instance is launched:
