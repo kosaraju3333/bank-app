@@ -17,10 +17,10 @@ The goal is to create a reusable AMI that comes pre-installed with:
 
 ### 🔧 Software Installation & Configuration
 
-#### 1. Install Java JDK 17
+#### 1. Install Java JRE 17
 ```bash
 sudo apt update
-sudo apt install -y openjdk-17-jdk
+sudo apt install -y openjdk-17-jre
 java -version
 ```
 
@@ -131,5 +131,4 @@ You now have a reusable AMI with:
 
 This AMI can be used in auto-scaling groups, launch templates, or EC2-based deployments for consistent infrastructure.
 
-
-
+---
