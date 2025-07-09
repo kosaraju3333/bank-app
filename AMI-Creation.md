@@ -40,7 +40,7 @@ Create a startup script to run the Java Bank App.
 📁 Path:
 /opt/bank-app-start.sh
 
-📜 Sample Script:
+📜 Script:
 ```bash
 #!/bin/bash
 
@@ -69,6 +69,36 @@ echo "********** Staring  bank app service from jar **********"
 exec /usr/bin/java -jar /home/ubuntu/bank-app/bankapp-0.0.1-SNAPSHOT.jar >> /var/log/bank-app/app.log 2>&1
 ```
 Make it executable:
+
 chmod +x /opt/bank-app-start.sh
+
+⚙️ Configure systemd Service
+📁 Location:
+/etc/systemd/system/bankapp.service
+
+📜 Service File:
+```bash
+[Unit]
+Description=Bank App Service
+After=network.target
+
+[Service]
+User=root
+WorkingDirectory=/opt
+ExecStart=/opt/bank-app-start.sh
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+```
+Enable, start and check status of the service:
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable bankapp.service
+sudo systemctl start bankapp.service
+sudo systemctl status bankapp.service
+```
+
 
 
