@@ -91,7 +91,6 @@ Restart=on-failure
 RestartSec=5
 SuccessExitStatus=143
 
-#Environment=JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 StandardOutput=journal
 StandardError=journal
 
@@ -105,6 +104,32 @@ sudo systemctl enable bankapp.service
 sudo systemctl start bankapp.service
 sudo systemctl status bankapp.service
 ```
+
+### 🖼️ Create the AMI
+Once everything is working as expected:
+
+Stop the EC2 instance (optional, recommended).
+
+In the AWS Console:
+
+Go to EC2 → Instances → Select your instance
+
+Click Actions → Image → Create Image
+
+Provide a name like java-bankapp-ami and description
+
+Create the AMI
+
+### ✅ Outcome
+You now have a reusable AMI with:
+
+Java 17 runtime
+
+AWS CLI pre-installed
+
+Java app bootstrapped via systemd
+
+This AMI can be used in auto-scaling groups, launch templates, or EC2-based deployments for consistent infrastructure.
 
 
 
