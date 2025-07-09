@@ -125,7 +125,7 @@ You now have a reusable AMI with:
 
   *  Java 17 runtime
 
-  *  AWS CLI pre-installed
+  *  AWS CLI pre-installed (To access the AWS S3 bucket to download the java jar (artifact)
 
   * Java app bootstrapped via systemd
 
