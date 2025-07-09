@@ -1,9 +1,9 @@
 name: Java app DevSecOps Ci/CD Pipeline
 
-on: 
-  push:
-    branches:
-      - "master"
+on: []
+  #push:
+    #branches:
+      #- "master"
 
 jobs:
   portal-app-CI-CD:
