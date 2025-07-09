@@ -128,6 +128,7 @@ You now have a reusable AMI with:
   * Java app bootstrapped via systemd
 
 This AMI can be used in auto-scaling groups, launch templates, or EC2-based deployments for consistent infrastructure.
+
 ---
 
 ## 🚀 Step 2: Deploy EC2 Instance from Custom AMI
