@@ -112,13 +112,13 @@ Once everything is working as expected:
 
 2. In the AWS Console:
 
-  *  Go to EC2 → Instances → Select your instance
+   *  Go to EC2 → Instances → Select your instance
 
-  *  Click Actions → Image → Create Image
+   *  Click Actions → Image → Create Image
 
-  *  Provide a name like java-bankapp-ami and description
+   *  Provide a name like java-bankapp-ami and description
 
-  *  Create the AMI
+   *  Create the AMI
 
 ### ✅ Outcome
 You now have a reusable AMI with:
