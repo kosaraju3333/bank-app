@@ -1,0 +1,25 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto17
+      
+  pre_build:
+    commands:
+      - cd $PROJECT_DIR    #navigate to your specific project folder
+      - mvn test -DskipTests=true
+      - mvn clean install -DskipTests
+      
+  build:
+    commands:
+      - echo "Building Spring Boot JAR..."
+      - mvn package -DskipTests=true
+      
+  post_build:
+    commands:
+      - echo "Pushing JAR to S3..."
+      - aws s3 cp target/*.jar s3://spontansolutions/bank-app/
+      - echo "Pushed JAR to AWS S3 successfully..."
+  
+      

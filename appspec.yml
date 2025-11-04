@@ -1,0 +1,18 @@
+version: 0.0
+os: linux
+files:
+  - source: scripts/bank-app-start.sh
+    destination: /opt/bank-app-start.sh
+
+hooks:
+
+  ApplicationStart:
+    - location: scripts/start-bank-app.sh
+      timeout: 180
+  # ValidateService:
+  #   - location: Scripts/MonitorService.sh
+  #     timeout: 3600
+  #     runas: codedeployuser
+
+
+  
