@@ -7,7 +7,6 @@ phases:
       
   pre_build:
     commands:
-      - cd $PROJECT_DIR    #navigate to your specific project folder
       - mvn test -DskipTests=true
       - mvn clean install -DskipTests
       
