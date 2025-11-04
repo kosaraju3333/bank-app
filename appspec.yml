@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
   - source: scripts/bank-app-start.sh
-    destination: /opt/bank-app-start.sh
+    destination: /opt/
 
 hooks:
 
