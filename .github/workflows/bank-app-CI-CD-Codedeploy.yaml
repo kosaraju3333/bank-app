@@ -74,3 +74,41 @@ jobs:
             echo "❌ ❌ Quality Gate Failed. Stoping deployment!! ❌ ❌ "
             exit 1
           fi
+
+
+    #################################### Build Phase ########################################
+
+    ### Run Tests
+      - name: Run Tests
+        run: mvn test -DskipTests=true
+
+    ### Packaging the app
+      - name: App package
+        run: mvn package -DskipTests=true
+
+    ### Verify JAR
+      - name: Verify JAR file
+        run: ls -l target/*.jar
+
+    ### Set Date Variable 
+      - name: Set Date Variable
+        run: echo "DATE=$(date +%Y%m%d-%H%M%S)" >> $GITHUB_ENV
+    
+
+    ### Configure AWS credentials 
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+
+    ### Uploading jar to AWS S3
+      - name: Upload to Nexus
+        run: |
+          aws s3 cp target/*.jar s3://{{ secrets.S3_BUCKET }}/bank-app/bank-app-$DATE.jar
+
+
+
+
