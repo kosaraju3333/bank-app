@@ -1,18 +1,15 @@
 version: 0.0
 os: linux
 files:
-  - source: scripts/bank-app-start.sh
+  - source: scripts/bank-app-pull-latest.sh
     destination: /opt/
 
 hooks:
-
   ApplicationStart:
     - location: scripts/start-bank-app.sh
       timeout: 180
-  # ValidateService:
-  #   - location: Scripts/MonitorService.sh
-  #     timeout: 3600
-  #     runas: codedeployuser
-
+  ValidateService:
+    - location: scripts/validation.sh
+      timeout: 180
 
   

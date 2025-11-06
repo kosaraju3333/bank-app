@@ -114,6 +114,7 @@ jobs:
           aws deploy create-deployment \
             --application-name "${{ secrets.CODEDEPLOY_APPLICATION_NAME }}" \
             --deployment-group-name "${{ secrets.CODEDEPLOY_DEPLOYMENT_GROUP }}" \
+            --s3-location bucket=spontansolutions/bank-app/,key=bank-app-codedeploy.zip,bundleType=zip
             --region "${{ secrets.AWS_REGION }}"
 
 
