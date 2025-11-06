@@ -1,24 +1,17 @@
 version: 0.0
 os: linux
 files:
-  - source: scripts/
-    destination: /opt/scripts/
+  - source: scripts/bank-app-pull-latest.sh
+    destination: /opt/
 
 hooks:
 
-  BeforeInstall:
-    - location: /opt/scripts/before-install.sh
-      timeout: 180
-      runas: root
-
   ApplicationStart:
-    - location: /opt/bank-app/scripts/start-bank-app.sh
+    - location: scripts/start-bank-app.sh
       timeout: 180
-      runas: root
 
   ValidateService:
-    - location: /opt/bank-app/scripts/validation.sh
+    - location: scripts/validation.sh
       timeout: 180
-      runas: root
 
   
