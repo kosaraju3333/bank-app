@@ -1,6 +1,7 @@
 name: Java app DevSecOps Ci/CD Pipeline
 
-on: []
+on:
+  workflow_dispatch:
   #push:
     #branches:
       #- "master"
