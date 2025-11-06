@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sudo chmod +x /opt/bank-app-start.sh
+sudo chmod +x /opt/bank-app-pull-latest.sh
 
 cat <<EOF | sudo tee /etc/systemd/system/bankapp.service
 [Unit]

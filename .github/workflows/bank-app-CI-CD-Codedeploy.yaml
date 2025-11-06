@@ -108,14 +108,60 @@ jobs:
         run: |
           aws s3 cp target/*.jar s3://${{ secrets.S3_BUCKET }}/bank-app/bank-app-${{ env.DATE }}.jar
           aws s3 cp target/*.jar s3://${{ secrets.S3_BUCKET }}/bank-app/bank-app.jar
+
+
+    #################################### Deploy Phase ########################################
           
       - name: Trigger AWS CodeDeploy
         run: |
-          aws deploy create-deployment \
+          set -e
+          DEPLOYMENT_ID=$(aws deploy create-deployment \
             --application-name "${{ secrets.CODEDEPLOY_APPLICATION_NAME }}" \
             --deployment-group-name "${{ secrets.CODEDEPLOY_DEPLOYMENT_GROUP }}" \
             --s3-location bucket=spontansolutions,key=bank-app/bank-app-codedeploy.zip,bundleType=zip \
-            --region "${{ secrets.AWS_REGION }}"
+            --region "${{ secrets.AWS_REGION }}" \
+            --output text \
+            --query 'deploymentId')
+
+            echo "Deployment started with ID: $DEPLOYMENT_ID"
+
+            # Wait for success or failure
+            if aws deploy wait deployment-successful --deployment-id "$DEPLOYMENT_ID" --region "${{ secrets.AWS_REGION }}"; then
+              echo "✅ CodeDeploy succeeded!"
+            else
+              echo "❌ CodeDeploy failed!"
+              aws deploy get-deployment --deployment-id "$DEPLOYMENT_ID" --region "${{ secrets.AWS_REGION }}"
+              exit 1
+            fi
+
+  ############################## Notifications #######################################
+    ### 🚨 Send Slack Alert on Failure
+      - name: Send Slack Alert on Failure
+        if: failure()
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data '{
+            "attachments": [
+              {
+                "color": "#FF0000",
+                "title": "🚨 CI/CD Pipeline Failed!",
+                "text": "❌ Repository: ${{ github.repository }}\nBranch: ${{ github.ref }}\nCheck logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+              }
+            ]
+          }' ${{ secrets.SLACK_WEBHOOK_URL }}
+
+    ### ✅ Send Slack Alert on Success
+      - name: Send Slack Alert on Success
+        if: success()
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data '{
+            "attachments": [
+              {
+                "color": "#36A64F",
+                "title": "✅ CI/CD Pipeline Succeeded!",
+                "text": "🎉 Repository: ${{ github.repository }}\nBranch: ${{ github.ref }}\nCheck logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+              }
+            ]
+          }' ${{ secrets.SLACK_WEBHOOK_URL }}
 
 
 
