@@ -29,9 +29,9 @@ export DB_PASSWORD=$(echo $SECRET_JSON | jq -r '.dbpassword')
 
 # Download bank app artifactory from AWS S3
 echo "********** Downloading bank app artifactory from AWS S3 **********"
-aws s3 cp s3://spontansolutions/bank-app/bankapp-0.0.1-SNAPSHOT.jar $working_dir
+aws s3 cp s3://spontansolutions/bank-app/bank-app.jar $working_dir
 
 # Start the Bank app up from jar
 echo "********** Staring  bank app service from jar **********"
-exec /usr/bin/java -jar /home/ubuntu/bank-app/bankapp-0.0.1-SNAPSHOT.jar >> /var/log/bank-app/app.log 2>&1
-#bash -c 'nohup java -jar /home/ubuntu/bank-app/bankapp-0.0.1-SNAPSHOT.jar >> /var/log/bank-app/app.log 2>&1 &'
+exec /usr/bin/java -jar /home/ubuntu/bank-app/bank-app.jar >> /var/log/bank-app/app.log 2>&1
+#bash -c 'nohup java -jar /home/ubuntu/bank-app/bankapp.jar >> /var/log/bank-app/app.log 2>&1 &'

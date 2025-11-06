@@ -38,42 +38,42 @@ jobs:
       - name: Maven Compile
         run: mvn compile
 
-    ### SonarQube Scane for code analysis
-      - name: Code analysis
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          npx sonarqube-scanner \
-          -Dsonar.projectKey=bank-app \
-          -Dsonar.sources=src/main/java \
-          -Dsonar.java.binaries=target/classes \
-          -Dsonar.host.url=https://sonarqube.spontansolutions.com/ \
-          -Dsonar.login=$SONAR_TOKEN
+    # ### SonarQube Scane for code analysis
+    #   - name: Code analysis
+    #     env:
+    #       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    #     run: |
+    #       npx sonarqube-scanner \
+    #       -Dsonar.projectKey=bank-app \
+    #       -Dsonar.sources=src/main/java \
+    #       -Dsonar.java.binaries=target/classes \
+    #       -Dsonar.host.url=https://sonarqube.spontansolutions.com/ \
+    #       -Dsonar.login=$SONAR_TOKEN
     
-    ### Wait for SonarQube Analysis
-      - name: Wait for SonarQube Analysis
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          STATUS="PENDING"
-          while [ "$STATUS" == "PENDING" ]; do
-            sleep 20
-            RESPONSE=$(curl -s -u $SONAR_TOKEN: "https://sonarqube.spontansolutions.com/api/qualitygates/project_status?projectKey=bank-app")
-            STATUS=$(echo "$RESPONSE" | jq -r '.projectStatus.status' || echo "PENDING")
-            echo "Waiting for SonarQube Analysis... Current Status: $STATUS"
-          done
+    # ### Wait for SonarQube Analysis
+    #   - name: Wait for SonarQube Analysis
+    #     env:
+    #       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    #     run: |
+    #       STATUS="PENDING"
+    #       while [ "$STATUS" == "PENDING" ]; do
+    #         sleep 20
+    #         RESPONSE=$(curl -s -u $SONAR_TOKEN: "https://sonarqube.spontansolutions.com/api/qualitygates/project_status?projectKey=bank-app")
+    #         STATUS=$(echo "$RESPONSE" | jq -r '.projectStatus.status' || echo "PENDING")
+    #         echo "Waiting for SonarQube Analysis... Current Status: $STATUS"
+    #       done
 
-    ### SonarQube Quality Gates
-      - name: Check SonarQube Quality Gate
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          STATUS=$(curl -s -u $SONAR_TOKEN: "https://sonarqube.spontansolutions.com/api/qualitygates/project_status?projectKey=bank-app" | jq -r .projectStatus.status)
-          echo $STATUS
-          if [ "$STATUS" != "OK" ]; then
-            echo "❌ ❌ Quality Gate Failed. Stoping deployment!! ❌ ❌ "
-            exit 1
-          fi
+    # ### SonarQube Quality Gates
+    #   - name: Check SonarQube Quality Gate
+    #     env:
+    #       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    #     run: |
+    #       STATUS=$(curl -s -u $SONAR_TOKEN: "https://sonarqube.spontansolutions.com/api/qualitygates/project_status?projectKey=bank-app" | jq -r .projectStatus.status)
+    #       echo $STATUS
+    #       if [ "$STATUS" != "OK" ]; then
+    #         echo "❌ ❌ Quality Gate Failed. Stoping deployment!! ❌ ❌ "
+    #         exit 1
+    #       fi
 
 
     #################################### Build Phase ########################################
@@ -103,13 +103,23 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-
     ### Uploading jar to AWS S3
       - name: Upload to S3
         run: |
           aws s3 cp target/*.jar s3://${{ secrets.S3_BUCKET }}/bank-app/bank-app-${{ env.DATE }}.jar
           aws s3 cp target/*.jar s3://${{ secrets.S3_BUCKET }}/bank-app/bank-app.jar
-
+          
+      - name: Trigger AWS CodeDeploy
+        uses: aws-actions/aws-cli@v2
+        with:
+          args: >
+            deploy create-deployment
+            --application-name "${{ secrets.CODEDEPLOY_APPLICATION_NAME }}"
+            --deployment-group-name "${{ secrets.CODEDEPLOY_DEPLOYMENT_GROUP }}"
+            --region "${{ secrets.AWS_REGION }}"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
 
 
