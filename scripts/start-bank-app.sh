@@ -10,7 +10,7 @@ After=network.target
 [Service]
 User=root
 WorkingDirectory=/opt
-ExecStart=/opt/bank-app-start.sh
+ExecStart=/opt/bank-app/scripts/bank-app-pull-latest.sh
 
 Restart=on-failure
 RestartSec=5

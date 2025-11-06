@@ -7,7 +7,7 @@ HEALTH_URL="http://localhost:${APP_PORT}/login"
 echo "Validating application health at $HEALTH_URL"
 
 # Give app some time to start
-sleep 10
+sleep 300
 
 for i in {1..10}; do
   STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" $HEALTH_URL || true)
