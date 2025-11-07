@@ -15,6 +15,7 @@ The design follows AWS best practices for **network isolation**, **data encrypti
 |------|--------------|-------------|
 | **Presentation Layer** | **Amazon CloudFront** | CDN for global content delivery and DDoS protection |
 |  | **Application Load Balancer (ALB)** | Internet-facing load balancer with HTTPS (SSL termination using ACM) |
+   | **Route 53** | Route 53 provides DNS resolution |
 | **Application Layer** | **EC2 Auto Scaling Group (ASG)** | Hosts the Java Spring Boot app in private subnets for scalability and high availability |
 |  | **AWS CodeDeploy (Blue-Green)** | Automates deployments and ensures zero downtime |
 | **Data Layer** | **Amazon RDS (MySQL)** | Encrypted relational database instance in private subnet |
@@ -60,13 +61,25 @@ All security groups follow the **principle of least privilege** and ensure tight
 
 ### 🧩 **In-Transit Encryption**
 - SSL/TLS enabled for:
-  - **Application Load Balancer (HTTPS on port 443)**
-  - **Database connections (RDS MySQL SSL)**  
+  - **Application Load Balancer (HTTPS on port 443)**  
   - **CloudFront to ALB communication (HTTPS)**
 
 ### 🔐 **Secrets Management**
 - Application secrets (DB credentials, tokens) are stored securely in **AWS Secrets Manager**.
 - EC2 instances access secrets privately through the **VPC Interface Endpoint**.
+
+---
+
+### **Route 53 DNS Management**
+To enable clean domain-based access and internal resolution:
+- **Public Hosted Zone:**
+  - Record: `bank.spontansolutions.com`
+  - Target: **CloudFront Distribution DNS**
+  - Purpose: Public users access the application via HTTPS endpoint `https://bank.spontansolutions.com`
+- **Private Hosted Zone:**
+  - Record: `bank-db.spontansolutions.com`
+  - Target: **RDS MySQL Endpoint**
+  - Purpose: Private DNS resolution for EC2 application servers to securely access the RDS database within the VPC.
 
 ---
 
@@ -142,5 +155,6 @@ Supporting Services:
 - ✅ **Slack notifications** for CI/CD transparency  
 
 ---
+
 
 
