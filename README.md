@@ -130,6 +130,7 @@ All sensitive data and transactions are encrypted and handled securely.
 | **Networking** | VPC, NAT Gateway, VPC Endpoints |
 | **Load Balancing** | AWS ALB |
 | **Caching & CDN** | AWS CloudFront |
+| **DNS** | AWS Route 53 |
 | **Monitoring** | CloudWatch, CodeDeploy Metrics |
 | **Notifications** | Slack |
 
@@ -146,16 +147,66 @@ Supporting Services:
 ---
 
 ## 🔐 Security Best Practices Implemented
-- ✅ **Private subnets for application and database layers  
-- ✅ **Public subnets only for ALB and NAT  
-- ✅ **SSL termination at ALB using ACM certificate  
-- ✅ **End-to-end encryption using AWS-managed KMS keys (`aws/ebs` & `aws/rds`)  
-- ✅ **S3 & Secrets Manager access via VPC endpoints  
-- ✅ **Route 53 public and private hosted zones for domain mapping  
-- ✅ **Principle of least privilege for IAM roles and SGs  
-- ✅ **Continuous security scanning using **Trivy** and **SonarQube** 
+- ✅ Private subnets for application and database layers  
+- ✅ Public subnets only for ALB and NAT  
+- ✅ SSL termination at ALB using ACM certificate  
+- ✅ End-to-end encryption using AWS-managed KMS keys (`aws/ebs` & `aws/rds`)  
+- ✅ S3 & Secrets Manager access via VPC endpoints  
+- ✅ Route 53 public and private hosted zones for domain mapping  
+- ✅ Principle of least privilege for IAM roles and SGs  
+- ✅ Continuous security scanning using **Trivy** and **SonarQube** 
 
 ---
+
+## 📸 Deployment Screenshots
+
+### 1️⃣ GitHub Actions CI/CD Pipeline
+![GitHub Actions Workflow](./screenshots/github-actions-pipeline.png)
+> Complete CI/CD pipeline triggered on push — includes Trivy, SonarQube, Maven build, and AWS CodeDeploy.
+
+---
+
+### 2️⃣ SonarQube Code Quality Report
+![SonarQube Scan](./screenshots/sonarqube-report.png)
+> Example of SonarQube quality gate passing successfully for Java Spring Boot code.
+
+---
+
+### 3️⃣ AWS CodeDeploy Blue/Green Deployment
+![CodeDeploy Blue Green](./screenshots/aws-codedeploy-bluegreen.png)
+> Blue/Green deployment status showing traffic shifting between target groups.
+
+---
+
+### 4️⃣ EC2 Auto Scaling Group
+![EC2 ASG](./screenshots/ec2-asg.png)
+> Application EC2 instances launched in private subnets with Auto Scaling enabled.
+
+---
+
+### 5️⃣ ALB & CloudFront Configuration
+![ALB CloudFront](./screenshots/alb-cloudfront.png)
+> ALB configured with HTTPS and connected to CloudFront distribution.
+
+---
+
+### 6️⃣ Route 53 DNS Setup
+![Route53](./screenshots/route53.png)
+> Public hosted zone mapping `bank.spontansolutions.com` to CloudFront and private zone mapping DB endpoint.
+
+---
+
+### 7️⃣ AWS Secrets Manager & VPC Endpoints
+![Secrets Manager Endpoint](./screenshots/secrets-manager-endpoint.png)
+> Secrets Manager interface endpoint and S3 gateway endpoint for private subnet access.
+
+---
+
+### 8️⃣ Application UI (Banking App)
+![Banking App UI](./screenshots/app-ui.png)
+> Java Spring Boot sample banking UI — supports register, login, deposit, withdraw, and transfer.
+
+
 
 
 
