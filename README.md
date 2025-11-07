@@ -174,6 +174,9 @@ Supporting Services:
 
 ### 3️⃣ AWS CodeDeploy Blue/Green Deployment
 ![CodeDeploy Blue Green](./screenshots/aws-codedeploy-bluegreen.png)
+![CodeDeploy events](./screenshots/deployments-events.png)
+![CodeDeploy events on Replacement instacne](./screenshots/deployment-events-on-replace.png)
+![CodeDeploy events on Orginal instacne](./screenshots/deployment-events-orginal.png)
 > Blue/Green deployment status showing traffic shifting between target groups.
 > Skipped Termination of old ASG because, This ensures rollback safety and allows monitoring of new version stability.
 
@@ -204,7 +207,15 @@ Supporting Services:
 
 ---
 
-### 8️⃣ Application UI (Banking App)
+### 8️⃣ AWS RDS MySQL Database
+![AWS RDS MySQL DB Endpoint](./screenshots/AWS-RDS.png)
+![Data in RDS MySQL DB](./screenshots/database-records-1.png)
+![Data in RDS MySQL DB](./screenshots/database-records-2.png)
+> RDS MySQL Database which is access from only app instance.
+
+---
+
+### 9️⃣ Application UI (Banking App)
 ![Banking App UI](./screenshots/app-ui.png)
 > Java Spring Boot sample banking UI — supports register, login, deposit, withdraw, and transfer.
 
