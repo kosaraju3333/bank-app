@@ -47,3 +47,100 @@ The design follows AWS best practices for **network isolation**, **data encrypti
 All security groups follow the **principle of least privilege** and ensure tight network isolation.
 
 ---
+
+## 🧱 Data Encryption & Security
+
+### 🛡️ **At-Rest Encryption**
+| Resource | KMS Key | Description |
+|-----------|----------|-------------|
+| **EC2 EBS Volumes** | `aws/ebs` | Automatically encrypted using AWS-managed KMS key. Data written to or read from the disk is transparently encrypted/decrypted by AWS. |
+| **RDS MySQL** | `aws/rds` | All database storage, backups, and snapshots are encrypted using AWS-managed KMS key. Decryption is automatic during read operations. |
+
+> Both services (EBS and RDS) use **AWS-managed keys**, providing strong encryption without requiring custom KMS permissions or key management overhead.
+
+### 🧩 **In-Transit Encryption**
+- SSL/TLS enabled for:
+  - **Application Load Balancer (HTTPS on port 443)**
+  - **Database connections (RDS MySQL SSL)**  
+  - **CloudFront to ALB communication (HTTPS)**
+
+### 🔐 **Secrets Management**
+- Application secrets (DB credentials, tokens) are stored securely in **AWS Secrets Manager**.
+- EC2 instances access secrets privately through the **VPC Interface Endpoint**.
+
+---
+
+## 💻 Application Overview
+A **Java Spring Boot Banking Application** that provides essential banking operations with secure user authentication and persistent storage.
+
+### 🧠 Core Features
+- 👤 User Registration & Login
+- 💰 Deposit & Withdraw Funds
+- 🔁 Transfer Between Accounts
+- 📜 View Transaction History
+- 🧾 Database persistence with RDS MySQL
+
+All sensitive data and transactions are encrypted and handled securely.
+
+---
+
+## ⚙️ DevSecOps CI/CD Pipeline
+
+### 🚀 **Pipeline Stages (GitHub Actions)**
+
+| Phase | Tool | Description |
+|--------|------|-------------|
+| **Pre-Build** | Trivy | Vulnerability and security scan of source code |
+|  | SonarQube | Static code analysis & quality gates |
+| **Build** | Maven | Compile, test, and package JAR artifact |
+| **Artifact Storage** | AWS S3 | Stores packaged JAR artifact for deployment |
+| **Deployment** | AWS CodeDeploy | Blue-Green deployment to EC2 Auto Scaling Group |
+| **Notification** | Slack | Real-time build and deployment status |
+
+> Pipeline defined in `.github/workflows/devsecops.yml`, triggered on code push to `main`.
+
+---
+
+## 🧰 Tech Stack
+
+| Category | Tool |
+|-----------|------|
+| **Language** | Java 17 |
+| **Framework** | Spring Boot |
+| **Build Tool** | Maven |
+| **CI/CD** | GitHub Actions + AWS CodeDeploy |
+| **Security** | Trivy, SonarQube, AWS Secrets Manager |
+| **Storage** | AWS S3 |
+| **Database** | Amazon RDS (MySQL) — Encrypted with `aws/rds` |
+| **Compute** | EC2 (Private Subnet) — Volumes encrypted with `aws/ebs` |
+| **Networking** | VPC, NAT Gateway, VPC Endpoints |
+| **Load Balancing** | AWS ALB |
+| **Caching & CDN** | AWS CloudFront |
+| **Monitoring** | CloudWatch, CodeDeploy Metrics |
+| **Notifications** | Slack |
+
+---
+
+## 📈 High-Level Architecture Diagram
+
+Supporting Services:
+- VPC Endpoints → S3, Secrets Manager  
+- NAT Gateway → Outbound AWS API access  
+- IAM Roles → Least privilege for EC2 & CodeDeploy  
+- GitHub Actions → Automated CI/CD pipeline  
+
+---
+
+## 🔐 Security Best Practices Implemented
+- ✅ **Private subnets** for EC2, RDS, and endpoints  
+- ✅ **Encryption at rest** using `aws/ebs` and `aws/rds`  
+- ✅ **Encryption in transit** (SSL/TLS everywhere)  
+- ✅ **Least privilege IAM roles** and SG design  
+- ✅ **VPC Endpoints** for private S3 and Secrets Manager access  
+- ✅ **No direct internet exposure** for app or database  
+- ✅ **Trivy & SonarQube** scans in CI pipeline  
+- ✅ **Slack notifications** for CI/CD transparency  
+
+---
+
+
