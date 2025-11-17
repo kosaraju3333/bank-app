@@ -1,10 +1,10 @@
 name: Java app DevSecOps Ci/CD Pipeline
 
 on:
-  # workflow_dispatch:
-  push:
-    branches:
-      - "master"
+   workflow_dispatch:
+  # push:
+  #   branches:
+  #     - "master"
 
 jobs:
   portal-app-CI-CD:
@@ -149,7 +149,7 @@ jobs:
           # cd git-ops-ArgoCD
           # ls -R
 
-      - name: Update Deployment YAML
+      - name: Update Deployment YAML in GitOps Repo
         run: |
           # cd git-ops-ArgoCD/bank-app/app
           cd git-ops-ArgoCD/argo-rollouts/bank-app/app/blue-green-deployments
