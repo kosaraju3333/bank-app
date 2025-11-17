@@ -136,10 +136,14 @@ Deployment Components:
 Argo Rollouts used for zero-downtime deployments with preview options.
 
 Check rollout status:
+```bash
 kubectl argo rollouts get rollout <rollout-name> -n <namespace>
+```
 
 Promote new version:
+```bash
 kubectl argo rollouts promote <rollout-name> -n <namespace>
+```
 
 ---
 
@@ -155,7 +159,10 @@ Pipeline Includes:
 - Update container image version in GitOps repo rollout manifest
 - ArgoCD auto-sync triggers deployment
 - Manual approval required for rollout promotion:
+
+```bash
     kubectl argo rollouts promote <rollout-name> -n <namespace>
+```
 
 ---
 
