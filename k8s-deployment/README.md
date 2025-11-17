@@ -63,25 +63,68 @@ It also includes a **DevSecOps CI/CD pipeline** using **GitHub Actions**, **Triv
 Configured to pull secrets directly from AWS Secrets Manager inside Pods.
 
 Created:
-
 - Namespace
-
 - Service Account with IAM policy
-
 - SecretProviderClass
-    ✔ Auto-syncs and mounts secrets in Pods.
+
+✔ Auto-syncs and mounts secrets in Pods.
 ---
 
 ## 📦 EBS CSI Driver (Persistent Volumes)
 
 Configured to dynamically provision:
-
-    - StorageClass
-
-    - PersistentVolume (PV)
-
-    - PersistentVolumeClaim (PVC)
-
-    - AWS EBS Volume
-
+- StorageClass
+- PersistentVolume (PV)
+- PersistentVolumeClaim (PVC)
+- AWS EBS Volume
 Used for MySQL database storage.
+
+---
+
+## 📤 AWS Load Balancer Controller
+
+Installed using eksctl.
+
+Used to expose:
+- Application endpoint
+- ArgoCD
+- Kubernetes Dashboard
+Creates AWS Application Load Balancer (ALB).
+
+---
+## 📘 Argo CD + GitOps
+
+- Installed ArgoCD in argocd namespace
+- Connected to GitHub GitOps repo
+- Enabled auto-sync
+- Exposed using ALB Ingress with SSL
+
+---
+
+## 🗄️ Database Deployment (MySQL)
+Resources Created:
+    - Namespace: database
+    - Service Account with IAM role
+    - SecretProviderClass (sync DB credentials)
+    - StorageClass for EBS auto-provisioning
+    - StatefulSet for MySQL database
+    - ClusterIP Service for internal-only access
+    - NetworkPolicy restricting access to App Pods only
+
+---
+
+## 🧩 Application Deployment (UI & Backend - Monolithic)
+Deployment Components:
+- Namespace
+- Service Account with IAM role
+- ConfigMap for Database endpoint
+- SecretProviderClass (fetch secrets)
+- Argo Rollout (Blue/Green)
+- Horizontal Pod Autoscaler (HPA)
+- Services:
+    - active-service
+    - preview-service
+- Ingress:
+    - SSL on 443
+    - HTTP → HTTPS redirection
+- Route53 mapping for ALB
