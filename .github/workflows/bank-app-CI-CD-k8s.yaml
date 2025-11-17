@@ -42,45 +42,45 @@ jobs:
           cd app 
           mvn compile
 
-    # ### SonarQube Scane for code analysis
-    #   - name: Code analysis
-    #     env:
-    #       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-    #     run: |
-    #       cd app
-    #       npx sonarqube-scanner \
-    #       -Dsonar.projectKey=bank-app \
-    #       -Dsonar.sources=src/main/java \
-    #       -Dsonar.java.binaries=target/classes \
-    #       -Dsonar.host.url=https://sonarqube.spontansolutions.com/ \
-    #       -Dsonar.login=$SONAR_TOKEN
+    ### SonarQube Scane for code analysis
+      - name: Code analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          cd app
+          npx sonarqube-scanner \
+          -Dsonar.projectKey=bank-app \
+          -Dsonar.sources=src/main/java \
+          -Dsonar.java.binaries=target/classes \
+          -Dsonar.host.url=https://sonarqube.spontansolutions.com/ \
+          -Dsonar.login=$SONAR_TOKEN
     
-    # ### Wait for SonarQube Analysis
-    #   - name: Wait for SonarQube Analysis
-    #     env:
-    #       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-    #     run: |
-    #       STATUS="PENDING"
-    #       while [ "$STATUS" == "PENDING" ]; do
-    #         sleep 20
-    #         RESPONSE=$(curl -s -u $SONAR_TOKEN: "https://sonarqube.spontansolutions.com/api/qualitygates/project_status?projectKey=bank-app")
-    #         STATUS=$(echo "$RESPONSE" | jq -r '.projectStatus.status' || echo "PENDING")
-    #         echo "Waiting for SonarQube Analysis... Current Status: $STATUS"
-    #       done
+    ### Wait for SonarQube Analysis
+      - name: Wait for SonarQube Analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          STATUS="PENDING"
+          while [ "$STATUS" == "PENDING" ]; do
+            sleep 20
+            RESPONSE=$(curl -s -u $SONAR_TOKEN: "https://sonarqube.spontansolutions.com/api/qualitygates/project_status?projectKey=bank-app")
+            STATUS=$(echo "$RESPONSE" | jq -r '.projectStatus.status' || echo "PENDING")
+            echo "Waiting for SonarQube Analysis... Current Status: $STATUS"
+          done
 
-    # ### SonarQube Quality Gates
-    #   - name: Check SonarQube Quality Gate
-    #     env:
-    #       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-    #     run: |
-    #       STATUS=$(curl -s -u $SONAR_TOKEN: "https://sonarqube.spontansolutions.com/api/qualitygates/project_status?projectKey=bank-app" | jq -r .projectStatus.status)
-    #       echo $STATUS
-    #       if [ "$STATUS" != "OK" ]; then
-    #         echo "❌ ❌ Quality Gate Failed. Stoping deployment!! ❌ ❌ "
-    #         exit 1
-    #       fi
+    ### SonarQube Quality Gates
+      - name: Check SonarQube Quality Gate
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          STATUS=$(curl -s -u $SONAR_TOKEN: "https://sonarqube.spontansolutions.com/api/qualitygates/project_status?projectKey=bank-app" | jq -r .projectStatus.status)
+          echo $STATUS
+          if [ "$STATUS" != "OK" ]; then
+            echo "❌ ❌ Quality Gate Failed. Stoping deployment!! ❌ ❌ "
+            exit 1
+          fi
 
-    #################################### Build Phase ########################################
+    ################################### Build Phase ########################################
 
     ### Run Tests
       - name: Run Tests
@@ -165,31 +165,31 @@ jobs:
         working-directory: git-ops-ArgoCD
 
 
-  # ############################## Notifications #######################################
-  #   ### 🚨 Send Slack Alert on Failure
-  #     - name: Send Slack Alert on Failure
-  #       if: failure()
-  #       run: |
-  #         curl -X POST -H 'Content-type: application/json' --data '{
-  #           "attachments": [
-  #             {
-  #               "color": "#FF0000",
-  #               "title": "🚨 CI/CD Pipeline Failed!",
-  #               "text": "❌ Repository: ${{ github.repository }}\nBranch: ${{ github.ref }}\nCheck logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-  #             }
-  #           ]
-  #         }' ${{ secrets.SLACK_WEBHOOK_URL }}
+  ############################## Notifications #######################################
+    ### 🚨 Send Slack Alert on Failure
+      - name: Send Slack Alert on Failure
+        if: failure()
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data '{
+            "attachments": [
+              {
+                "color": "#FF0000",
+                "title": "🚨 CI/CD Pipeline Failed!",
+                "text": "❌ Repository: ${{ github.repository }}\nBranch: ${{ github.ref }}\nCheck logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+              }
+            ]
+          }' ${{ secrets.SLACK_WEBHOOK_URL }}
 
-  #   ### ✅ Send Slack Alert on Success
-  #     - name: Send Slack Alert on Success
-  #       if: success()
-  #       run: |
-  #         curl -X POST -H 'Content-type: application/json' --data '{
-  #           "attachments": [
-  #             {
-  #               "color": "#36A64F",
-  #               "title": "✅ CI/CD Pipeline Succeeded!",
-  #               "text": "🎉 Repository: ${{ github.repository }}\nBranch: ${{ github.ref }}\nCheck logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-  #             }
-  #           ]
-  #         }' ${{ secrets.SLACK_WEBHOOK_URL }}
+    ### ✅ Send Slack Alert on Success
+      - name: Send Slack Alert on Success
+        if: success()
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data '{
+            "attachments": [
+              {
+                "color": "#36A64F",
+                "title": "✅ CI/CD Pipeline Succeeded!",
+                "text": "🎉 Repository: ${{ github.repository }}\nBranch: ${{ github.ref }}\nCheck logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+              }
+            ]
+          }' ${{ secrets.SLACK_WEBHOOK_URL }}
