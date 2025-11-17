@@ -162,11 +162,11 @@ Pipeline Includes:
 ## 🌐 DNS + SSL
 
 Route53:
-    - Created hosted zone
-    - Added ALB (dualstack) alias record
+- Created hosted zone
+- Added ALB (dualstack) alias record
 SSL:
-    - Configured using ACM (ALB-level TLS termination)
-    - Optional: Internal SSL using cert-manager
+- Configured using ACM (ALB-level TLS termination)
+- Optional: Internal SSL using cert-manager
 
 ---
 
@@ -179,30 +179,39 @@ SSL:
 ---
 
 📌 Commands Reference
+
 Update kubeconfig
-aws eks update-kubeconfig --region us-east-1 --name bank-eks
+```bash
+aws eks update-kubeconfig --region us-east-1 --name cluster_name
+```
 
-Get rollout status
+Get rollout status:
+```bash
 kubectl argo rollouts get rollout bankapp -n bank
+```
 
-Promote rollout
+Promote rollout:
+```bash
 kubectl argo rollouts promote bankapp -n bank
+```
 
-Get Ingress ALB
+Get Ingress ALB:
+```bash
 kubectl get ingress -A
+```
 
 🎯 Summary
 
 This project demonstrates:
 
-✔ Fully private EKS production architecture
-✔ GitOps with ArgoCD
-✔ Blue/Green deployments with Argo Rollouts
-✔ MySQL StatefulSet with EBS
-✔ AWS Secrets Manager integration
-✔ Horizontal Pod Autoscaling
-✔ Ingress + ALB + SSL
-✔ Route53 domain setup
-✔ End-to-End DevSecOps pipeline
+- Fully private EKS production architecture
+- GitOps with ArgoCD
+- Blue/Green deployments with Argo Rollouts
+- MySQL StatefulSet with EBS
+- AWS Secrets Manager integration
+- Horizontal Pod Autoscaling
+- Ingress + ALB + SSL
+- Route53 domain setup
+- End-to-End DevSecOps pipeline
 
 A complete real-world, enterprise-ready DevOps + Cloud + Kubernetes implementation.
