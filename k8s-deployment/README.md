@@ -103,13 +103,13 @@ Creates AWS Application Load Balancer (ALB).
 
 ## 🗄️ Database Deployment (MySQL)
 Resources Created:
-    - Namespace: database
-    - Service Account with IAM role
-    - SecretProviderClass (sync DB credentials)
-    - StorageClass for EBS auto-provisioning
-    - StatefulSet for MySQL database
-    - ClusterIP Service for internal-only access
-    - NetworkPolicy restricting access to App Pods only
+- Namespace: database
+- Service Account with IAM role
+- SecretProviderClass (sync DB credentials)
+- StorageClass for EBS auto-provisioning
+- StatefulSet for MySQL database
+- ClusterIP Service for internal-only access
+- NetworkPolicy restricting access to App Pods only
 
 ---
 
@@ -128,3 +128,81 @@ Deployment Components:
     - SSL on 443
     - HTTP → HTTPS redirection
 - Route53 mapping for ALB
+
+---
+
+## 🚦 GitOps + Argo Rollouts (Blue/Green Strategy)
+
+Argo Rollouts used for zero-downtime deployments with preview options.
+
+Check rollout status:
+kubectl argo rollouts get rollout <rollout-name> -n <namespace>
+
+Promote new version:
+kubectl argo rollouts promote <rollout-name> -n <namespace>
+
+---
+
+## 🛡️ DevSecOps CI/CD (GitHub Actions)
+
+Pipeline Includes:
+- Trivy – Vulnerability scanning (source code)
+- Maven build – Compiling Java application
+- SonarQube – Static code analysis
+- Build Docker image
+- Trivy scan on Docker image
+- Push Docker image to GitHub Container Registry
+- Update container image version in GitOps repo rollout manifest
+- ArgoCD auto-sync triggers deployment
+- Manual approval required for rollout promotion:
+    kubectl argo rollouts promote <rollout-name> -n <namespace>
+
+---
+
+## 🌐 DNS + SSL
+
+Route53:
+    - Created hosted zone
+    - Added ALB (dualstack) alias record
+SSL:
+    - Configured using ACM (ALB-level TLS termination)
+    - Optional: Internal SSL using cert-manager
+
+---
+
+### 🖥️ Kubernetes Dashboard
+
+- Installed via Helm
+- Exposed using Ingress
+- Secured access
+
+---
+
+📌 Commands Reference
+Update kubeconfig
+aws eks update-kubeconfig --region us-east-1 --name bank-eks
+
+Get rollout status
+kubectl argo rollouts get rollout bankapp -n bank
+
+Promote rollout
+kubectl argo rollouts promote bankapp -n bank
+
+Get Ingress ALB
+kubectl get ingress -A
+
+🎯 Summary
+
+This project demonstrates:
+
+✔ Fully private EKS production architecture
+✔ GitOps with ArgoCD
+✔ Blue/Green deployments with Argo Rollouts
+✔ MySQL StatefulSet with EBS
+✔ AWS Secrets Manager integration
+✔ Horizontal Pod Autoscaling
+✔ Ingress + ALB + SSL
+✔ Route53 domain setup
+✔ End-to-End DevSecOps pipeline
+
+A complete real-world, enterprise-ready DevOps + Cloud + Kubernetes implementation.
