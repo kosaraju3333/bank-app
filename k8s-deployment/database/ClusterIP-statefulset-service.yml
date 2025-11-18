@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: bank-database-statefulset-service
+  namespace: bank-database
+spec:
+  selector:
+    app: bank-database-statefulset
+  ports:
+    - protocol: TCP
+      # Below Port number is a service port number
+      port: 3306
+      # Below targetPort is a Container Port number
+      targetPort: 3306

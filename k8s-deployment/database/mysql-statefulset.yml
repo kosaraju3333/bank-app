@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: bank-database-statefulset
+  namespace: bank-database
+  labels:
+    app: bank-database-statefulset
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bank-database-statefulset
+  template:
+    metadata:
+      name: bank-database-statefulset-app
+      labels:
+        app: bank-database-statefulset
+    spec:
+      serviceAccountName: bank-database-service-account
+
+      containers:
+      - name: bank-database-statefulset-container
+        image: mysql:8
+          #imagePullPolicy: "IfNotPresent"
+          #image: postgres:latest
+        ports:
+        - containerPort: 3306
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: bank-database-secrets
+                key: dbpassword
+
+          - name: MYSQL_DATABASE
+            valueFrom:
+              secretKeyRef:
+                name: bank-database-secrets
+                key: dbname
+
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+
+        volumeMounts:
+          - mountPath: /var/lib/mysql
+            name: mysql-db
+
+          - name: secrets-store-inline
+            mountPath: "/mnt/secrets-store"
+
+      volumes:
+      - name: secrets-store-inline
+        csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true
+          volumeAttributes:
+            secretProviderClass: "bank-db-aws-secrets"
+
+  volumeClaimTemplates:
+  - metadata:
+      name: mysql-db
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "mysql-ebs-sc"
+      resources:
+        requests:
+          storage: 1Gi

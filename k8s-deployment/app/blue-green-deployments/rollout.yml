@@ -1,0 +1,87 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: bank-app-argo-rollout
+  namespace: bank-app
+  labels:
+    app: bank-app
+spec:
+  #replicas: 3
+  strategy:
+    blueGreen:
+      activeService: bank-app-rollout-active-service
+      previewService: bank-app-rollout-preview-service
+      autoPromotionEnabled: false
+  selector:
+    matchLabels:
+      app: bank-app
+  template:
+    metadata:
+      labels:
+        app: bank-app
+    spec:
+      serviceAccountName: bank-app-service-account
+
+      containers:
+        - name: bank-app-container
+          image: kosaraju333/bank-app:20251117-122242
+          ports:
+            - containerPort: 5050
+
+          livenessProbe:
+            httpGet:
+              path: /login
+              port: 5050
+            initialDelaySeconds: 10  ## Liveness probe executed after 10 or N seconds dealy after apllication set up
+            periodSeconds: 10 ## Liveness probe is executed for every 10 or N seconds
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 5 ## Number of Liveness probe failures, container restarts after failureThreshold is 2 or N
+          readinessProbe:
+            httpGet:
+              path: /login
+              port: 5050
+            initialDelaySeconds: 10  ## Readiness probe executed after 10 or N seconds dealy after apllication set up
+            periodSeconds: 10 ## Readiness probe is executed for every 10 or N seconds
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 2 ## Number of Readiness probe failures, container restarts after failureThreshold is 2 or N
+
+          env:
+            - name: SPRING_DATASOURCE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: bank-app-configmap
+                  key: db_host
+
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: bank-app-secrets
+                  key: dbuser
+
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: bank-app-secrets
+                  key: dbpassword
+
+          resources:
+            requests:
+              memory: "500Mi"
+              cpu: "500m"
+            limits:
+              memory: "1000Mi"
+              cpu: "1000m"
+
+          volumeMounts:
+            - name: secrets-store-inline
+              mountPath: "/mnt/secrets-store"
+
+      volumes:
+      - name: secrets-store-inline
+        csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true
+          volumeAttributes:
+            secretProviderClass: "bank-app-aws-secrets"

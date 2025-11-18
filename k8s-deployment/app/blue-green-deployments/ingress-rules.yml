@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: bank-app
+  name: blugreen-bank-app-ingress-resource
+  annotations:
+    alb.ingress.kubernetes.io/load-balancer-name: bluegreen-bank-app-alb
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:828048069567:certificate/043d5d2d-3645-4a14-879b-f36d24c4c339
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80}, {"HTTPS":443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/healthcheck-path: /login
+    alb.ingress.kubernetes.io/target-group-attributes: stickiness.enabled=true,stickiness.lb_cookie.duration_seconds=3600
+
+spec:
+  ingressClassName: alb
+  rules:
+    - host: bank.spontansolutions.com
+      http:
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: bank-app-rollout-active-service
+              port:
+                number: 80
