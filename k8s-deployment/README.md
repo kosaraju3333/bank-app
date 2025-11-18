@@ -6,6 +6,8 @@ It also includes a **DevSecOps CI/CD pipeline** using **GitHub Actions**, **Triv
 
 ---
 
+### GitOps Repo: https://github.com/kosaraju3333/git-ops-ArgoCD/tree/master/argo-rollouts/bank-app
+
 ## 📌 Table of Contents
 - [🔧 Infrastructure](#-infrastructure)
 - [☸️ Kubernetes Setup](#️-kubernetes-setup)
