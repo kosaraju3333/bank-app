@@ -229,13 +229,17 @@ A complete real-world, enterprise-ready DevOps + Cloud + Kubernetes implementati
 ### 1️⃣ GitHub Actions CI/CD Pipeline
 ![GitHub Actions Workflow](./screenshots/CICD-pipeline-1.png)
 ![GitHub Actions Workflow](./screenshots/CICD-pipeline-2.png)
+> Pipeline defined in `.github/workflows/bank-app-CI-CD-k8s.yml`, triggered on code push to `master`.
 > Complete CI/CD pipeline triggered on push — includes Trivy, SonarQube, Maven build, Docker build, push, and update GitOps meanifest files with latest Image version.
 
 ---
 
-### 2️⃣ SonarQube Code Quality Report
+### 2️⃣ SonarQube Code Quality Report, Dockerub and Notification
 ![SonarQube Scan](./screenshots/sonarqube-report.png)
+![DockerHub](./screenshots/DockerHub.png)
+![Notification](./screenshots/notification.png)
 > Example of SonarQube quality gate passing successfully for Java Spring Boot code.
+
 
 ---
 
