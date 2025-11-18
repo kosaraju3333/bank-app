@@ -240,7 +240,6 @@ A complete real-world, enterprise-ready DevOps + Cloud + Kubernetes implementati
 ![Notification](./screenshots/notification.png)
 > Example of SonarQube quality gate passing successfully for Java Spring Boot code.
 
-
 ---
 
 ### 3️⃣ EKS Cluster
