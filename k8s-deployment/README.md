@@ -222,3 +222,53 @@ This project demonstrates:
 - End-to-End DevSecOps pipeline
 
 A complete real-world, enterprise-ready DevOps + Cloud + Kubernetes implementation.
+
+---
+
+## 📸 Deployment Screenshots
+### 1️⃣ GitHub Actions CI/CD Pipeline
+![GitHub Actions Workflow](./screenshots/CICD-pipeline-1.png)
+![GitHub Actions Workflow](./screenshots/CICD-pipeline-2.png)
+> Complete CI/CD pipeline triggered on push — includes Trivy, SonarQube, Maven build, Docker build, push, and update GitOps meanifest files with latest Image version.
+
+---
+
+### 2️⃣ SonarQube Code Quality Report
+![SonarQube Scan](./screenshots/sonarqube-report.png)
+> Example of SonarQube quality gate passing successfully for Java Spring Boot code.
+
+---
+
+### 3️⃣ EKS Cluster
+![EKS Cluster](./screenshots/EKS-cluster-1.png)
+![EKS Cluster](./screenshots/EKS-cluster-2-nodegroup.png)
+
+--- 
+
+### 4️⃣ database deployemnt
+![database deployment](./screenshots/k8s-bank-database-1.png)
+![database deployment](./screenshots/k8s-bank-database-2.png)
+![Persistent Volume](./screenshots/EBS-persistent-Volume.png)
+
+---
+
+### 5️⃣ App deployment
+![app deployment](./screenshots/k8s-bank-app-1.png)
+![app deployment](./screenshots/k8s-bank-app-2.png)
+
+---
+
+### 6️⃣ Exposed to external world
+![Ingress controller](./screenshots/Ingress-exposed-to-internet.png)
+![ALB](./screenshots/ALB.png)
+
+---
+
+### 7️⃣ ArgoCD and K8s Dashboard
+![ArgoCD Dashboard](./screenshots/ArgoCD-overall-dashboard.png)
+![ArgoCD Database Dashboard](./screenshots/ArgoCd-bank-database-dashboard.png)
+![ArgoCD App Dashboard](./screenshots/ArgoCD-bank-app-dashboard.png)
+![Kubernetes  Dashboard](./screenshots/k8s-dashboard.png)
+
+
+
