@@ -111,7 +111,7 @@ All sensitive data and transactions are encrypted and handled securely.
 | **Deployment** | AWS CodeDeploy | Blue-Green deployment to EC2 Auto Scaling Group |
 | **Notification** | Slack | Real-time build and deployment status |
 
-> Pipeline defined in `.github/workflows/devsecops.yml`, triggered on code push to `main`.
+> Pipeline defined in `.github/workflows/bank-app-CI-CD-Codedeploy.yml`, triggered on code push to `main`.
 
 ---
 
@@ -218,6 +218,7 @@ Supporting Services:
 ### 9️⃣ Application UI (Banking App)
 ![Banking App UI](./screenshots/app-ui.png)
 > Java Spring Boot sample banking UI — supports register, login, deposit, withdraw, and transfer.
+
 
 
 
