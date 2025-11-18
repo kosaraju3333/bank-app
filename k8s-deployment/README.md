@@ -66,8 +66,8 @@ Created:
 - Namespace
 - Service Account with IAM policy
 - SecretProviderClass
+- Auto-syncs and mounts secrets in Pods.
 
-✔ Auto-syncs and mounts secrets in Pods.
 ---
 
 ## 📦 EBS CSI Driver (Persistent Volumes)
@@ -86,7 +86,7 @@ Used for MySQL database storage.
 Installed using eksctl.
 
 Used to expose:
-- Application endpoint
+- Application endpoint to internet
 - ArgoCD
 - Kubernetes Dashboard
 Creates AWS Application Load Balancer (ALB).
@@ -97,14 +97,14 @@ Creates AWS Application Load Balancer (ALB).
 - Installed ArgoCD in argocd namespace
 - Connected to GitHub GitOps repo
 - Enabled auto-sync
-- Exposed using ALB Ingress with SSL
+- Exposed ARGOCD Dashboard using ALB Ingress with SSL
 
 ---
 
 ## 🗄️ Database Deployment (MySQL)
 Resources Created:
 - Namespace: database
-- Service Account with IAM role
+- Service Account with IAM role to access AWS Secret Manager
 - SecretProviderClass (sync DB credentials)
 - StorageClass for EBS auto-provisioning
 - StatefulSet for MySQL database
@@ -116,10 +116,10 @@ Resources Created:
 ## 🧩 Application Deployment (UI & Backend - Monolithic)
 Deployment Components:
 - Namespace
-- Service Account with IAM role
+- Service Account with IAM role to access AWS Secret Manager
 - ConfigMap for Database endpoint
 - SecretProviderClass (fetch secrets)
-- Argo Rollout (Blue/Green)
+- Argo Rollout (Blue/Green) for deployment
 - Horizontal Pod Autoscaler (HPA)
 - Services:
     - active-service
